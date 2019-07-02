@@ -18,6 +18,7 @@ namespace ChatApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddChatAppDbContext(Configuration);
+            services.AddRepositoryWrapper();
         }
 
 
