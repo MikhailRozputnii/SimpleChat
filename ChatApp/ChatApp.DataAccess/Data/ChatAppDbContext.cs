@@ -13,8 +13,8 @@ namespace ChatApp.DataAccess.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfiguration(new UserConfig());
             base.OnModelCreating(modelBuilder);
+            modelBuilder.ApplyConfiguration(new UserConfig());
         }
     }
 }
