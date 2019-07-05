@@ -17,6 +17,7 @@ namespace ChatApp.DataAccess.Migrations
                     Email = table.Column<string>(maxLength: 50, nullable: false),
                     NormalizedEmail = table.Column<string>(nullable: true),
                     PasswordHash = table.Column<string>(nullable: false),
+                    CreateDate = table.Column<DateTime>(nullable: false),
                     IsDeleted = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>

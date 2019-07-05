@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ChatApp.DataAccess.Migrations
 {
     [DbContext(typeof(ChatAppDbContext))]
-    [Migration("20190615191459_init")]
+    [Migration("20190702191444_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,6 +25,8 @@ namespace ChatApp.DataAccess.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("CreateDate");
 
                     b.Property<string>("Email")
                         .IsRequired()
