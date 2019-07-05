@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace ChatApp.Domains
 {
@@ -12,6 +13,7 @@ namespace ChatApp.Domains
         public string PasswordHash { get; set; }
         public DateTime CreateDate { get; set; }
         public bool IsDeleted { get; set; }
-       
+
+        public virtual ICollection<UserRole> UserRoles { get; set; }
     }
 }
