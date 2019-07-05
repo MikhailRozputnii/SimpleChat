@@ -39,12 +39,14 @@ namespace ChatApp.Core.Services.Identity
             cancellationToken.ThrowIfCancellationRequested();
             if (userDto == null)
                 throw new ArgumentNullException(nameof(userDto));
+
             var entity = _mapper.Map<User>(userDto);
             await Task.Run(() => _repository.UserRepository.Create(entity));
             _repository.Save();
             var isExists = await Task.Run(() => _repository.UserRepository.GetByCondition(i => i.Email == userDto.Email) != null);
             if (!isExists)
                 return IdentityResult.Failed(new IdentityError { Description = $"Could not insert user {userDto.Email}." });
+
             return IdentityResult.Success;
         }
 
@@ -53,9 +55,11 @@ namespace ChatApp.Core.Services.Identity
             cancellationToken.ThrowIfCancellationRequested();
             if (userDto == null)
                 throw new ArgumentNullException(nameof(userDto));
+
             var entity = await Task.Run(() => _repository.UserRepository.GetByCondition(i => i.Id == userDto.Id));
             if (entity == null)
                 IdentityResult.Failed(new IdentityError { Description = $"Could not delete user {userDto.Email}." });
+
             entity.IsDeleted = true;
             await Task.Run(() => _repository.UserRepository.Update(entity));
             _repository.Save();
@@ -67,9 +71,11 @@ namespace ChatApp.Core.Services.Identity
             cancellationToken.ThrowIfCancellationRequested();
             if (userId == null)
                 throw new ArgumentNullException(nameof(userId));
+
             Guid idGuid;
             if (!Guid.TryParse(userId, out idGuid))
                 throw new ArgumentException("Not a valid Guid id", nameof(userId));
+
             var entity = await Task.Run(() => _repository.UserRepository.GetByCondition(i => i.Id == idGuid));
             var userDto = _mapper.Map<UserDto>(entity);
 
@@ -81,6 +87,7 @@ namespace ChatApp.Core.Services.Identity
             cancellationToken.ThrowIfCancellationRequested();
             if (userName == null)
                 throw new ArgumentNullException(nameof(userName));
+
             var entity = await Task.Run(() => _repository.UserRepository.GetByCondition(i => i.Email == userName));
             var userDto = _mapper.Map<UserDto>(entity);
             return userDto;
@@ -91,6 +98,7 @@ namespace ChatApp.Core.Services.Identity
             cancellationToken.ThrowIfCancellationRequested();
             if (userDto == null)
                 throw new ArgumentNullException(nameof(userDto));
+
             return Task.FromResult(userDto.NormalizedEmail);
         }
 
@@ -99,6 +107,7 @@ namespace ChatApp.Core.Services.Identity
             cancellationToken.ThrowIfCancellationRequested();
             if (userDto == null)
                 throw new ArgumentNullException(nameof(userDto));
+
             return Task.FromResult(userDto.Id.ToString());
         }
 
@@ -107,6 +116,7 @@ namespace ChatApp.Core.Services.Identity
             cancellationToken.ThrowIfCancellationRequested();
             if (userDto == null)
                 throw new ArgumentNullException(nameof(userDto));
+
             return Task.FromResult(userDto.Email);
         }
 
@@ -127,6 +137,7 @@ namespace ChatApp.Core.Services.Identity
             cancellationToken.ThrowIfCancellationRequested();
             if (userDto == null)
                 throw new ArgumentNullException(nameof(userDto));
+
             userDto.Email = userName;
             return Task.CompletedTask;
         }
@@ -136,15 +147,16 @@ namespace ChatApp.Core.Services.Identity
             cancellationToken.ThrowIfCancellationRequested();
             if (userDto == null)
                 throw new ArgumentNullException(nameof(userDto));
+
             var entity = await Task.Run(() => _repository.UserRepository.GetByCondition(i => i.Id == userDto.Id));
             if (entity == null)
                 return IdentityResult.Failed(new IdentityError { Description = $"Could not update user {userDto.Email}." });
-            var newPasswordHash = 
+
             entity.FirstName = userDto.FirstName;
             entity.LastName = userDto.LastName;
             entity.Email = userDto.Email;
             entity.PasswordHash = userDto.PasswordHash;
-            await Task.Run(()=>_repository.UserRepository.Update(entity));
+            await Task.Run(() => _repository.UserRepository.Update(entity));
             _repository.Save();
             return IdentityResult.Success;
         }

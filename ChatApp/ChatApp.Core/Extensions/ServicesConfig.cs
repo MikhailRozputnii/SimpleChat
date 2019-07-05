@@ -9,13 +9,10 @@ namespace ChatApp.Core.Extensions
     {
         public static void AddCustomIdentityProvider(this IServiceCollection services)
         {
-            //services.AddIdentity<UserDto, UserRoleDto>()
-            //        .AddDefaultTokenProviders();
             services.AddIdentityCore<UserDto>()
                .AddSignInManager()
                .AddDefaultTokenProviders();
             services.AddTransient<IUserStore<UserDto>, UserStore>();
-            //services.AddTransient<IRoleStore<UserRoleDto>, RoleStore>();
         }
     }
 }

@@ -48,6 +48,7 @@ namespace ChatApp.DataAccess.Data.Repositories
         {
             if (entity == null)
                 throw new ArgumentNullException();
+            entity.CreateDate = DateTime.UtcNow;
             _dbContext.Set<TEntity>().Update(entity);
         }
     }
