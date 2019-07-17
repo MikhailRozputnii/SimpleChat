@@ -1,14 +1,17 @@
 ﻿using AutoMapper;
 using ChatApp.Core.Dto;
-using ChatApp.Core.Extensions;
-using ChatApp.DataAccess.Data;
+using ChatApp.Core.Services.Identity;
 using ChatApp.DataAccess.Extensions;
+using ChatApp.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using System;
+using System.Text;
 
 namespace ChatApp
 {
@@ -24,52 +27,71 @@ namespace ChatApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddAutoMapper();
+            services.AddMvc();
             services.AddChatAppDbContext(Configuration);
             services.AddRepositoryWrapper();
-            services.AddCustomIdentityProvider();
+            services.AddIdentityCore<UserDto>()
+              .AddSignInManager()
+              .AddDefaultTokenProviders();
+            services.AddTransient<IUserStore<UserDto>, UserStore>();
             services.Configure<IdentityOptions>(options =>
             {
-                options.Password.RequireDigit = true;
-                options.Password.RequiredLength = 6;
+                options.Password.RequireDigit = false;
                 options.Password.RequireNonAlphanumeric = false;
-                options.Password.RequireUppercase = false;
                 options.Password.RequireLowercase = false;
-                options.Password.RequiredUniqueChars = 2;
-
-                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
-                options.Lockout.MaxFailedAccessAttempts = 10;
-                options.Lockout.AllowedForNewUsers = true;
-
-                options.User.RequireUniqueEmail = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequiredLength = 4;
             });
 
-            services.AddAuthentication(o =>
-            {
-                o.DefaultScheme = IdentityConstants.ApplicationScheme;
-                o.DefaultSignInScheme = IdentityConstants.ExternalScheme;
-            }).AddIdentityCookies(o => { });
+            services.AddCors();
 
+            var key = Encoding.UTF8.GetBytes(ApplicationSettings.JWT_Secret);
+
+            services.AddAuthentication(x =>
+             {
+                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                 x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                 x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+             }).AddJwtBearer(x =>
+             {
+                 x.RequireHttpsMetadata = false;
+                 x.SaveToken = false;
+                 x.TokenValidationParameters = new TokenValidationParameters
+                 {
+                     ValidateIssuerSigningKey = true,
+                     IssuerSigningKey = new SymmetricSecurityKey(key),
+                     ValidateIssuer = false,
+                     ValidateAudience = false,
+                     ClockSkew = TimeSpan.Zero
+                 };
+             });
         }
 
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ChatAppDbContext db, SignInManager<UserDto> s)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            app.Use(async (ctx, next) =>
+            {
+                await next();
+                if (ctx.Response.StatusCode == 204)
+                {
+                    ctx.Response.ContentLength = 0;
+                }
+            });
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-
-                if (s.UserManager.FindByNameAsync("dev").Result == null)
-                {
-                    var result = s.UserManager.CreateAsync(new UserDto
-                    {
-                        FirstName = "devF",
-                        LastName = "devL",
-                        Email = "dev@app.com"
-                    }, "Aut94L#G-a").Result;
-                }
-
             }
+            app.UseCors(builder =>
+           builder.WithOrigins(ApplicationSettings.Client_URL)
+           .AllowAnyHeader()
+           .AllowAnyMethod()
+
+           );
+
             app.UseAuthentication();
+            app.UseMvc();
         }
     }
 }
