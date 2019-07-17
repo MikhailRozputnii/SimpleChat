@@ -13,4 +13,8 @@
     <ProjectReference Include="..\ChatApp.DataAccess\ChatApp.DataAccess.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Extensions\" />
+  </ItemGroup>
+
 </Project>
