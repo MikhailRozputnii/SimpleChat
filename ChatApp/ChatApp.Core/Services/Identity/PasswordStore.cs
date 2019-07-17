@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ChatApp.Core.Services.Identity
 {
-    internal partial class UserStore : IUserPasswordStore<UserDto>
+    public partial class UserStore : IUserPasswordStore<UserDto>
     {
         public Task<string> GetPasswordHashAsync(UserDto user, CancellationToken cancellationToken)
         {

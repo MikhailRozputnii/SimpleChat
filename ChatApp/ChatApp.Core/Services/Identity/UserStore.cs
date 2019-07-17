@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ChatApp.Core.Services.Identity
 {
-    internal partial class UserStore : IUserStore<UserDto>
+    public partial class UserStore : IUserStore<UserDto>
     {
         private IMapper _mapper;
         private readonly IRepositoryWrapper _repository;
