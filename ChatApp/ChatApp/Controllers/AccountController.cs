@@ -12,19 +12,17 @@ using System.Threading.Tasks;
 
 namespace ChatApp.Controllers
 {
-
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class AccountController : ControllerBase
     {
         private UserManager<UserDto> _userManager;
+
         public AccountController(UserManager<UserDto> userManager)
         {
             _userManager = userManager;
         }
 
-        [AllowAnonymous]
         [HttpPost]
         [Route("Register")]
         public async Task<Object> PostRegister(RegisterViewModel registerModel)
@@ -46,11 +44,10 @@ namespace ChatApp.Controllers
                 throw ex;
             }
         }
-
-        [AllowAnonymous]
+        
         [HttpPost]
         [Route("Login")]
-        public async Task<IActionResult> Login(LoginViewModel model)
+        public async Task<IActionResult> PostLogin(LoginViewModel model)
         {
             var user = await _userManager.FindByNameAsync(model.UserName);
             if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
@@ -59,7 +56,7 @@ namespace ChatApp.Controllers
                 {
                     Subject = new ClaimsIdentity(new Claim[]
                     {
-                        new Claim("UserID",user.Id.ToString())
+                        new Claim("UserID", user.Id.ToString())
                     }),
                     Expires = DateTime.UtcNow.AddDays(1),
                     SigningCredentials = new SigningCredentials(

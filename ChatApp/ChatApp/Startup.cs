@@ -67,7 +67,6 @@ namespace ChatApp
              });
         }
 
-
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             app.Use(async (ctx, next) =>
