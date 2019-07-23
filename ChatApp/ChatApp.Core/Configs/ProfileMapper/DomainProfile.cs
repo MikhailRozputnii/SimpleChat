@@ -12,7 +12,6 @@ namespace ChatApp.Core.Configs.ProfileMapper
         public DomainProfile()
         {
             CreateMap<User, UserDto>().ReverseMap();
-            CreateMap<UserRole, UserRoleDto>().ReverseMap();
             CreateMap<Role, RoleDto>().ReverseMap();
 
         }
