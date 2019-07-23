@@ -9,6 +9,6 @@ namespace ChatApp.Core.Dto
 
         public Guid Id { get; set; }
         public string Name { get; set; }
-        public virtual ICollection<UserRoleDto> UserRoles { get; set; }
+        public virtual ICollection<UserDto> Users { get; set; }
     }
 }

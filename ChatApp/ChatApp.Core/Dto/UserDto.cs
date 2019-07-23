@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace ChatApp.Core.Dto
 {
@@ -13,6 +12,6 @@ namespace ChatApp.Core.Dto
         public string PasswordHash { get; set; }
         public bool IsDeleted { get; set; }
 
-        public ICollection<UserRoleDto> UserRoles { get; set; }
+        public RoleDto Role { get; set; }
     }
 }

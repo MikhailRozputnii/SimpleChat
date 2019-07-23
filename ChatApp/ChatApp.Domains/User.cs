@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace ChatApp.Domains
 {
@@ -14,6 +13,6 @@ namespace ChatApp.Domains
         public DateTime CreateDate { get; set; }
         public bool IsDeleted { get; set; }
 
-        public virtual ICollection<UserRole> UserRoles { get; set; }
+        public Role Role { get; set; }
     }
 }

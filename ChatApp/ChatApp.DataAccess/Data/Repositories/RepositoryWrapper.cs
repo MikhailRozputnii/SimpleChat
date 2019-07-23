@@ -7,7 +7,6 @@ namespace ChatApp.DataAccess.Data.Repositories
     {
         private readonly ChatAppDbContext _dbContext;
         private IUserRepository _userRepository;
-        private IUserRoleRepository _userRoleRepository;
         private IRoleRepository _roleRepository;
         private bool _disposed = false;
 
@@ -20,17 +19,7 @@ namespace ChatApp.DataAccess.Data.Repositories
                 return _userRepository;
             }
         }
-
-        public IUserRoleRepository UserRoleRepository
-        {
-            get
-            {
-                if (_userRoleRepository == null)
-                    _userRoleRepository = new UserRoleRepository(_dbContext);
-                return _userRoleRepository;
-            }
-        }
-
+       
         public IRoleRepository RoleRepository
         {
             get
