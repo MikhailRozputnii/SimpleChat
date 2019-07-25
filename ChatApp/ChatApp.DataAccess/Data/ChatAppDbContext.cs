@@ -7,6 +7,9 @@ namespace ChatApp.DataAccess.Data
     public class ChatAppDbContext : DbContext
     {
         public DbSet<User> Users { get; set; }
+        public DbSet<Friend> Friends { get; set; }
+        public DbSet<Message> Messages { get; set; }
+       
         public DbSet<Role> Roles { get; set; }
         public ChatAppDbContext(DbContextOptions options) : base(options)
         {
