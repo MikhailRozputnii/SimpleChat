@@ -2,6 +2,7 @@
 using ChatApp.Core.Dto;
 using ChatApp.Core.Services.Identity;
 using ChatApp.DataAccess.Extensions;
+using ChatApp.HubConfig;
 using ChatApp.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -65,6 +66,7 @@ namespace ChatApp
                      ClockSkew = TimeSpan.Zero
                  };
              });
+            services.AddSignalR();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -86,9 +88,12 @@ namespace ChatApp
            builder.WithOrigins(ApplicationSettings.Client_URL)
            .AllowAnyHeader()
            .AllowAnyMethod()
-
+           .AllowCredentials()
            );
-
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<ChatHub>("/chat");
+            });
             app.UseAuthentication();
             app.UseMvc();
         }
